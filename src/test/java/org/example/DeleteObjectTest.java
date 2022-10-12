@@ -1,5 +1,8 @@
 package org.example;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -27,8 +30,12 @@ public class DeleteObjectTest {
     public void startServer() {
         mockServer = startClientAndServer(PortFactory.findFreePort());
 
+        AWSCredentialsProvider provider = new AWSStaticCredentialsProvider(
+                new BasicAWSCredentials("test-access-key", "test-secret-key"));
+
         s3 = AmazonS3ClientBuilder
                 .standard()
+                .withCredentials(provider)
                 .withEndpointConfiguration(
                         new AwsClientBuilder.EndpointConfiguration(
                                 "http://localhost:" + mockServer.getPort(),
